@@ -25,4 +25,14 @@ class CategoryModel extends Category {
       'color': color,
     };
   }
+
+  
+  factory CategoryModel.fromJson(Map<String, dynamic> json) {
+    return CategoryModel(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      imageUrl: json['imageUrl'] as String?,
+      color: json['color'] as String?,
+    );
+  }
 }
