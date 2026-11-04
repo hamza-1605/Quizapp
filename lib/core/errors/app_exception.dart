@@ -18,3 +18,8 @@ class ServerException extends AppException {
 
   final int? statusCode;
 }
+
+/// The content was downloaded, but saving it on this device failed.
+class StorageException extends AppException {
+  const StorageException(super.message);
+}
