@@ -2,8 +2,8 @@ import 'package:quiz_app/core/errors/app_exception.dart';
 import 'package:quiz_app/features/sync/domain/entities/sync_result.dart';
 import 'package:quiz_app/features/sync/domain/repositories/sync_repository.dart';
 
-class SyncContent {
-  SyncContent(this._repository);
+class SyncContentUsecase {
+  SyncContentUsecase(this._repository);
   final SyncRepository _repository;
 
   Future<SyncResult> call({void Function()? onSlowResponse}) async {
