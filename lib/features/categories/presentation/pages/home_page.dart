@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quiz_app/features/categories/presentation/controllers/home_controller.dart';
+import 'package:quiz_app/features/categories/presentation/widgets/category_tile.dart';
 
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
@@ -18,16 +19,8 @@ class HomePage extends GetView<HomeController> {
         }
         return ListView.builder(
           itemCount: controller.categories.length,
-          itemBuilder: (context, index) {
-            final category = controller.categories[index];
-            return ListTile(
-              leading: CircleAvatar(
-                child: Text(
-                  category.name.isEmpty ? '?' : category.name[0].toUpperCase(),
-                ),
-              ),
-              title: Text(category.name),
-            );
+           itemBuilder: (context, index) {
+            return CategoryTile(category: controller.categories[index]);
           },
         );
       }),
