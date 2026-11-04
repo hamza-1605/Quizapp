@@ -1,11 +1,14 @@
 import 'package:get/get.dart';
 import 'package:quiz_app/features/categories/domain/entities/category.dart';
 import 'package:quiz_app/features/categories/domain/usecases/get_categories_usecase.dart';
+import 'package:quiz_app/features/sync/domain/entities/sync_result.dart';
+import 'package:quiz_app/features/sync/presentation/controllers/sync_controller.dart';
 
 class HomeController extends GetxController {
-  HomeController(this._getCategoriesUsecase);
+  HomeController(this._getCategoriesUsecase, this._syncController);
 
   final GetCategoriesUsecase _getCategoriesUsecase;
+  final SyncController _syncController;
 
   final categories = <Category>[].obs;
   final isLoading = true.obs;
@@ -14,6 +17,10 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     loadCategories();
+    // When a sync brings new content, show it.
+    ever(_syncController.lastResult, (result) {
+      if (result is SyncUpdated) loadCategories();
+    });
   }
 
   Future<void> loadCategories() async {
