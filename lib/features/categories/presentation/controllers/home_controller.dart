@@ -24,7 +24,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> loadCategories() async {
-    isLoading.value = true;
+    if (categories.isEmpty) isLoading.value = true; // spinner on first load only
     try {
       categories.assignAll(await _getCategoriesUsecase());
     } 
