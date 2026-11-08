@@ -19,7 +19,7 @@ class SyncStatusBar extends GetView<SyncController> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
-            if (controller.isSyncing.value) ...[
+            if (controller.isBusy) ...[
               const SizedBox(
                 width: 14,
                 height: 14,
@@ -47,6 +47,10 @@ class SyncStatusBar extends GetView<SyncController> {
       return controller.isServerSlow.value
           ? 'Server is waking up, this can take a minute...'
           : 'Checking for updates...';
+    }
+    if (controller.isDownloadingImages.value &&
+        controller.imagesTotal.value > 0) {
+      return 'Downloading images: ${controller.imagesDone.value} of ${controller.imagesTotal.value}';
     }
     return switch (controller.lastResult.value) {
       SyncUpToDate() => 'Up to date',

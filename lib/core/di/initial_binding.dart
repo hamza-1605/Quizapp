@@ -12,6 +12,10 @@ import 'package:quiz_app/features/sync/domain/repositories/sync_repository.dart'
 import 'package:quiz_app/features/sync/domain/usecases/get_last_checked_at_usecase.dart';
 import 'package:quiz_app/features/sync/domain/usecases/sync_content_usecase.dart';
 import 'package:quiz_app/features/sync/presentation/controllers/sync_controller.dart';
+import 'package:quiz_app/core/cache/app_image_cache.dart';
+import 'package:quiz_app/features/sync/data/repositories/image_cache_repository_impl.dart';
+import 'package:quiz_app/features/sync/domain/repositories/image_cache_repository.dart';
+import 'package:quiz_app/features/sync/domain/usecases/prefetch_images_usecase.dart';
 
 /// Creates the objects that live for the whole life of the app.
 class InitialBinding extends Bindings {
@@ -50,10 +54,25 @@ class InitialBinding extends Bindings {
       GetLastCheckedAtUsecase(Get.find<SyncRepository>()),
       permanent: true,
     );
+
+    // Caching Images
+    Get.put<ImageCacheRepository>(
+      ImageCacheRepositoryImpl(AppImageCache.instance),
+      permanent: true,
+    );
+    Get.put<PrefetchImagesUsecase>(
+      PrefetchImagesUsecase(
+        Get.find<SyncRepository>(),
+        Get.find<ImageCacheRepository>(),
+      ),
+      permanent: true,
+    );
+    
     Get.put<SyncController>(
       SyncController(
         syncContentUsecase: Get.find<SyncContentUsecase>(),
         getLastCheckedAtUsecase: Get.find<GetLastCheckedAtUsecase>(),
+        prefetchImagesUsecase: Get.find<PrefetchImagesUsecase>(),
       ),
       permanent: true,
     );

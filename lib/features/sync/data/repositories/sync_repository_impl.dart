@@ -40,7 +40,11 @@ class SyncRepositoryImpl implements SyncRepository {
       questions: summary.questions,
       questionsAdded: summary.questionsAdded,
     );
-  }
+  } 
+  
+  @override
+  Future<List<String>> getImageUrls() => _guardStorage(_local.getImageUrls);
+
 
 
   // Turns database errors into our own exception type.

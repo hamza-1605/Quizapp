@@ -15,4 +15,6 @@ abstract interface class SyncRepository {
   Future<SyncUpdated> downloadAndReplaceContent({
     void Function()? onSlowResponse,
   });
+
+  Future<List<String>> getImageUrls();
 }

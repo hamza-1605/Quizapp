@@ -23,7 +23,7 @@ class HomePage extends GetView<HomeController> {
             return IconButton(
               icon: const Icon(Icons.refresh),
               tooltip: 'Check for updates',
-              onPressed: sync.isSyncing.value ? null : sync.sync,
+              onPressed: sync.isBusy ? null : sync.sync,
             );
           }),
         ],

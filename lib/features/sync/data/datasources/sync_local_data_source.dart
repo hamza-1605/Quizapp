@@ -79,6 +79,21 @@ class SyncLocalDataSource {
     });
   }
 
+
+  // Every distinct, non-empty image URL of categories and questions.
+  Future<List<String>> getImageUrls() async {
+    final db = await _appDatabase.database;
+    final rows = await db.rawQuery('''
+      SELECT image_url FROM categories
+        WHERE image_url IS NOT NULL AND image_url != ''
+      UNION
+      SELECT image_url FROM questions
+        WHERE image_url IS NOT NULL AND image_url != ''
+    ''');
+    return rows.map((row) => row['image_url'] as String).toList();
+  }
+
+  
   Future<String?> _getMeta(String key) async {
     final db = await _appDatabase.database;
     final rows = await db.query(
