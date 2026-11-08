@@ -16,6 +16,10 @@ import 'package:quiz_app/core/cache/app_image_cache.dart';
 import 'package:quiz_app/features/sync/data/repositories/image_cache_repository_impl.dart';
 import 'package:quiz_app/features/sync/domain/repositories/image_cache_repository.dart';
 import 'package:quiz_app/features/sync/domain/usecases/prefetch_images_usecase.dart';
+import 'package:quiz_app/features/quiz/data/datasources/question_local_data_source.dart';
+import 'package:quiz_app/features/quiz/data/repositories/question_repository_impl.dart';
+import 'package:quiz_app/features/quiz/domain/repositories/question_repository.dart';
+import 'package:quiz_app/features/quiz/domain/usecases/build_round_usecase.dart';
 
 /// Creates the objects that live for the whole life of the app.
 class InitialBinding extends Bindings {
@@ -35,6 +39,20 @@ class InitialBinding extends Bindings {
     );
     Get.put<GetCategoriesUsecase>(
       GetCategoriesUsecase(Get.find<CategoryRepository>()),
+      permanent: true,
+    );
+
+    // Quiz
+    Get.put<QuestionLocalDataSource>(
+      QuestionLocalDataSource(Get.find<AppDatabase>()),
+      permanent: true,
+    );
+    Get.put<QuestionRepository>(
+      QuestionRepositoryImpl(Get.find<QuestionLocalDataSource>()),
+      permanent: true,
+    );
+    Get.put<BuildRoundUsecase>(
+      BuildRoundUsecase(Get.find<QuestionRepository>()),
       permanent: true,
     );
 

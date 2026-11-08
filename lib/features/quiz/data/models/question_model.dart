@@ -34,7 +34,7 @@ class QuestionModel extends Question {
     );
   }
 
-  /// Row for the `questions` table.
+  // Row for the `questions` table.
   Map<String, Object?> toMap() {
     return {
       'id': id,
@@ -46,7 +46,7 @@ class QuestionModel extends Question {
     };
   }
 
-  /// Rows for the `options` table, one per answer option.
+  // Rows for the `options` table, one per answer option.
   List<Map<String, Object?>> optionMaps() {
     return [
       for (final option in options)
@@ -58,6 +58,33 @@ class QuestionModel extends Question {
         },
     ];
   }
+
+  // Builds a question from a `questions` row and its already-built options.
+  factory QuestionModel.fromMap(
+    Map<String, Object?> map,
+    List<AnswerOption> options,
+  ) {
+    return QuestionModel(
+      id: map['id'] as int,
+      categoryId: map['category_id'] as int,
+      text: map['question_text'] as String,
+      type: _typeFromApi(map['type'] as String),
+      explanation: map['explanation'] as String?,
+      imageUrl: map['image_url'] as String?,
+      options: options,
+    );
+  }
+
+  // Builds an option from an `options` row.
+  static AnswerOption optionFromMap(Map<String, Object?> map) {
+    return AnswerOption(
+      id: map['id'] as int,
+      text: map['option_text'] as String,
+      isCorrect: map['is_correct'] == 1,
+    );
+  }
+
+
 
   static QuestionType _typeFromApi(String value) => switch (value) {
         'TRUE_FALSE' => QuestionType.trueFalse,
