@@ -42,7 +42,11 @@ class HomePage extends GetView<HomeController> {
               child: ListView.builder(
                 itemCount: controller.categories.length,
                 itemBuilder: (context, index) {
-                  return CategoryTile(category: controller.categories[index]);
+                  final category = controller.categories[index];
+                  return CategoryTile(
+                    category: category,
+                    onTap: () => controller.openCategory(category),
+                  );
                 },
               ),
             ),

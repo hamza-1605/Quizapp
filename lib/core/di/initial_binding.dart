@@ -5,6 +5,7 @@ import 'package:quiz_app/features/categories/data/datasources/category_local_dat
 import 'package:quiz_app/features/categories/data/repositories/category_repository_impl.dart';
 import 'package:quiz_app/features/categories/domain/repositories/category_repository.dart';
 import 'package:quiz_app/features/categories/domain/usecases/get_categories_usecase.dart';
+import 'package:quiz_app/features/quiz/domain/usecases/get_available_question_count_usecase.dart';
 import 'package:quiz_app/features/sync/data/datasources/sync_local_data_source.dart';
 import 'package:quiz_app/features/sync/data/datasources/sync_remote_data_source.dart';
 import 'package:quiz_app/features/sync/data/repositories/sync_repository_impl.dart';
@@ -55,6 +56,11 @@ class InitialBinding extends Bindings {
       BuildRoundUsecase(Get.find<QuestionRepository>()),
       permanent: true,
     );
+    Get.put<GetAvailableQuestionCountUsecase>(
+      GetAvailableQuestionCountUsecase(Get.find<QuestionRepository>()),
+      permanent: true,
+    );
+    
 
     // Sync
     Get.put<SyncRepository>(

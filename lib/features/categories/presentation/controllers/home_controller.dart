@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
+import 'package:quiz_app/core/routes/app_routes.dart';
 import 'package:quiz_app/features/categories/domain/entities/category.dart';
 import 'package:quiz_app/features/categories/domain/usecases/get_categories_usecase.dart';
+import 'package:quiz_app/features/quiz/presentation/models/round_setup_arguments.dart';
 import 'package:quiz_app/features/sync/domain/entities/sync_result.dart';
 import 'package:quiz_app/features/sync/presentation/controllers/sync_controller.dart';
 
@@ -31,5 +33,16 @@ class HomeController extends GetxController {
     finally {
       isLoading.value = false;
     }
+  }
+
+
+    void openCategory(Category category) {
+    Get.toNamed(
+      AppRoutes.roundSetup,
+      arguments: RoundSetupArguments(
+        categoryIds: [category.id],
+        title: category.name,
+      ),
+    );
   }
 }
