@@ -36,12 +36,22 @@ class HomeController extends GetxController {
   }
 
 
-    void openCategory(Category category) {
+  void openCategory(Category category) {
     Get.toNamed(
       AppRoutes.roundSetup,
       arguments: RoundSetupArguments(
         categoryIds: [category.id],
         title: category.name,
+      ),
+    );
+  }
+
+  void openRandomRound() {
+    Get.toNamed(
+      AppRoutes.roundSetup,
+      arguments: RoundSetupArguments(
+        categoryIds: categories.map((category) => category.id).toList(),
+        title: 'Random mix',
       ),
     );
   }
