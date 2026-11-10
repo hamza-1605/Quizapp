@@ -25,9 +25,12 @@ class QuizController extends GetxController {
   bool get isLastQuestion => currentIndex.value == totalQuestions - 1;
   Map<int, int> get answers => Map.unmodifiable(_answers);
 
+  // True while the user is answering questions (not loading, failed or done).
+  bool get isRoundInProgress => !isLoading.value && errorMessage.value == null && !isFinished.value;
+
   bool get isCurrentAnswerCorrect => currentQuestion.options.any(
         (option) => option.isCorrect && option.id == selectedOptionId.value,
-      );
+  );
 
   int get score => _questions
       .where((q) => q.options.any(

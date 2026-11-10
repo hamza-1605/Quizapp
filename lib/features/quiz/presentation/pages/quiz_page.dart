@@ -3,28 +3,53 @@ import 'package:get/get.dart';
 import 'package:quiz_app/features/quiz/domain/entities/answer_option.dart';
 import 'package:quiz_app/features/quiz/presentation/controllers/quiz_controller.dart';
 import 'package:quiz_app/features/quiz/presentation/widgets/answer_option_tile.dart';
+import 'package:quiz_app/features/quiz/presentation/widgets/question_image.dart';
 
 class QuizPage extends GetView<QuizController> {
   const QuizPage({super.key});
 
+  Future<void> _confirmQuit(BuildContext context) async {
+    final quit = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Quit this round?'),
+        content: const Text('Your progress in this round will be lost.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Keep playing'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Quit'),
+          ),
+        ],
+      ),
+    );
+    if (quit == true) Get.back();
+  }
+
+  Widget _buildBody() {
+    if (controller.isLoading.value)   return const Center(child: CircularProgressIndicator());
+    final error = controller.errorMessage.value;
+    if (error != null)   return _ErrorView(message: error);
+    if (controller.isFinished.value)  return const _FinishedView();
+    return const _QuestionView();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Obx(() => Text(controller.appBarTitle))),
-      body: SafeArea(
-        child: Obx(() {
-          if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final error = controller.errorMessage.value;
-          if (error != null) {
-            return Center(child: Text(error));
-          }
-          if (controller.isFinished.value) {
-            return const _FinishedView();
-          }
-          return const _QuestionView();
-        }),
+    return Obx(
+      () => PopScope(
+        // While a round is running, going back must be confirmed first.
+        canPop: !controller.isRoundInProgress,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) _confirmQuit(context);
+        },
+        child: Scaffold(
+          appBar: AppBar(title: Text(controller.appBarTitle)),
+          body: SafeArea(child: _buildBody()),
+        ),
       ),
     );
   }
@@ -49,6 +74,7 @@ class _QuestionView extends GetView<QuizController> {
 
     return Obx(() {
       final question = controller.currentQuestion;
+      final imageUrl = question.imageUrl;
       final submitted = controller.isSubmitted.value;
       final hasSelection = controller.selectedOptionId.value != null;
 
@@ -68,6 +94,10 @@ class _QuestionView extends GetView<QuizController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (imageUrl != null && imageUrl.isNotEmpty) ...[
+                    QuestionImage(url: imageUrl),
+                    const SizedBox(height: 16),
+                  ],
                   Text(question.text, style: theme.textTheme.titleLarge),
                   const SizedBox(height: 24),
                   for (final option in question.options)
@@ -150,8 +180,11 @@ class _FinishedView extends GetView<QuizController> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.emoji_events_outlined,
-                size: 64, color: theme.colorScheme.primary),
+            Icon(
+              Icons.emoji_events_outlined,
+              size: 64,
+              color: theme.colorScheme.primary,
+            ),
             const SizedBox(height: 24),
             Text('Round complete', style: theme.textTheme.titleLarge),
             const SizedBox(height: 12),
@@ -163,6 +196,40 @@ class _FinishedView extends GetView<QuizController> {
             FilledButton(
               onPressed: controller.backToHome,
               child: const Text('Back to home'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ErrorView extends StatelessWidget {
+  const _ErrorView({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
+            const SizedBox(height: 24),
+            Text(
+              message,
+              style: theme.textTheme.bodyLarge,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            FilledButton(
+              onPressed: () => Get.back(),
+              child: const Text('Go back'),
             ),
           ],
         ),
