@@ -60,9 +60,14 @@ class ResultsPage extends GetView<ResultsController> {
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: controller.backToHome,
-                    child: const Text('Back to home'),
+                    onPressed: controller.openReview,
+                    child: const Text('Review answers'),
                   ),
+                ),
+                const SizedBox(height: 12),
+                TextButton(
+                  onPressed: controller.backToHome,
+                  child: const Text('Back to home'),
                 ),
               ],
             ),

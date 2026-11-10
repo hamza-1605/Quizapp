@@ -14,5 +14,7 @@ class ResultsController extends GetxController {
   void playAgain() =>
       Get.offNamed(AppRoutes.quiz, arguments: arguments.quizArguments);
 
+  void openReview() => Get.toNamed(AppRoutes.review, arguments: result);
+  
   void backToHome() => Get.until((route) => route.isFirst);
 }
