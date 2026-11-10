@@ -1,7 +1,10 @@
 import 'package:get/get.dart';
+import 'package:quiz_app/core/routes/app_routes.dart';
 import 'package:quiz_app/features/quiz/domain/entities/question.dart';
+import 'package:quiz_app/features/quiz/domain/entities/round_result.dart';
 import 'package:quiz_app/features/quiz/domain/usecases/build_round_usecase.dart';
 import 'package:quiz_app/features/quiz/presentation/models/quiz_arguments.dart';
+import 'package:quiz_app/features/quiz/presentation/models/results_arguments.dart';
 
 class QuizController extends GetxController {
   QuizController(this._buildRoundUsecase, this.arguments);
@@ -14,7 +17,6 @@ class QuizController extends GetxController {
   final currentIndex = 0.obs;
   final selectedOptionId = Rxn<int>();
   final isSubmitted = false.obs;
-  final isFinished = false.obs;
 
   // The round lives in memory, so a background sync can never change it.
   List<Question> _questions = const [];
@@ -23,23 +25,16 @@ class QuizController extends GetxController {
   int get totalQuestions => _questions.length;
   Question get currentQuestion => _questions[currentIndex.value];
   bool get isLastQuestion => currentIndex.value == totalQuestions - 1;
-  Map<int, int> get answers => Map.unmodifiable(_answers);
 
-  // True while the user is answering questions (not loading, failed or done).
-  bool get isRoundInProgress => !isLoading.value && errorMessage.value == null && !isFinished.value;
+  // True while the user is answering questions (not loading or failed).
+  bool get isRoundInProgress => !isLoading.value && errorMessage.value == null;
 
   bool get isCurrentAnswerCorrect => currentQuestion.options.any(
         (option) => option.isCorrect && option.id == selectedOptionId.value,
   );
 
-  int get score => _questions
-      .where((q) => q.options.any(
-            (option) => option.isCorrect && option.id == _answers[q.id],
-          ))
-      .length;
-
   String get appBarTitle {
-    if (isLoading.value || errorMessage.value != null || isFinished.value) {
+    if (isLoading.value || errorMessage.value != null) {
       return arguments.title;
     }
     return 'Question ${currentIndex.value + 1} of $totalQuestions';
@@ -82,7 +77,7 @@ class QuizController extends GetxController {
   void next() {
     if (!isSubmitted.value) return;
     if (isLastQuestion) {
-      isFinished.value = true;
+      _finishRound();
       return;
     }
     currentIndex.value++;
@@ -90,5 +85,15 @@ class QuizController extends GetxController {
     isSubmitted.value = false;
   }
 
-  void backToHome() => Get.until((route) => route.isFirst);
+  void _finishRound() {
+    // offNamed replaces this page, so "back" from the results never
+    // returns to a finished round.
+    Get.offNamed(
+      AppRoutes.results,
+      arguments: ResultsArguments(
+        result: RoundResult(questions: _questions, answers: Map.of(_answers)),
+        quizArguments: arguments,
+      ),
+    );
+  }
 }

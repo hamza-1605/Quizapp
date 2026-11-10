@@ -33,7 +33,6 @@ class QuizPage extends GetView<QuizController> {
     if (controller.isLoading.value)   return const Center(child: CircularProgressIndicator());
     final error = controller.errorMessage.value;
     if (error != null)   return _ErrorView(message: error);
-    if (controller.isFinished.value)  return const _FinishedView();
     return const _QuestionView();
   }
 
@@ -167,42 +166,6 @@ class _Feedback extends StatelessWidget {
   }
 }
 
-class _FinishedView extends GetView<QuizController> {
-  const _FinishedView();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.emoji_events_outlined,
-              size: 64,
-              color: theme.colorScheme.primary,
-            ),
-            const SizedBox(height: 24),
-            Text('Round complete', style: theme.textTheme.titleLarge),
-            const SizedBox(height: 12),
-            Text(
-              'You scored ${controller.score} of ${controller.totalQuestions}',
-              style: theme.textTheme.bodyLarge,
-            ),
-            const SizedBox(height: 24),
-            FilledButton(
-              onPressed: controller.backToHome,
-              child: const Text('Back to home'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class _ErrorView extends StatelessWidget {
   const _ErrorView({required this.message});
