@@ -55,4 +55,15 @@ class HomeController extends GetxController {
       ),
     );
   }
+
+  void openCustomRound() {
+    Get.toNamed(
+      AppRoutes.roundSetup,
+      arguments: RoundSetupArguments(
+        categoryIds: const [],
+        title: 'Custom quiz',
+        selectableCategories: categories.toList(),
+      ),
+    );
+  }
 }

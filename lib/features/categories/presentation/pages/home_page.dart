@@ -61,6 +61,12 @@ class HomePage extends GetView<HomeController> {
                         subtitle: 'Questions from all categories',
                         onTap: controller.openRandomRound,
                       ),
+                      RoundModeTile(
+                        icon: Icons.tune,
+                        title: 'Custom quiz',
+                        subtitle: 'Pick your own categories',
+                        onTap: controller.openCustomRound,
+                      ),
                     ],
                   );
                 },
