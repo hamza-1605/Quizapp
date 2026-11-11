@@ -9,6 +9,7 @@ class RoundSetupController extends GetxController {
 
   static const countOptions = [10, 20, 30];
   static const minCustomCategories = 2;
+  static const paceOptions = [6, 10, 12, 15]; // seconds per question
 
   final GetQuestionCountsUsecase _getQuestionCountsUsecase;
   final RoundSetupArguments arguments;
@@ -17,6 +18,8 @@ class RoundSetupController extends GetxController {
   final counts = <int, int>{}.obs; // category id -> number of questions
   final selectedCategoryIds = <int>{}.obs; // custom rounds only
   final selectedCount = 10.obs;
+  final isTimerOn = false.obs;    // timer options
+  final secondsPerQuestion = 12.obs;
 
   bool get isCustom => arguments.isCustom;
 
@@ -47,6 +50,14 @@ class RoundSetupController extends GetxController {
   bool isAvailable(int count) => count <= availableCount;
 
   int categoryQuestionCount(int categoryId) => counts[categoryId] ?? 0;
+
+  // timer functions
+  int get totalSeconds => secondsPerQuestion.value * selectedCount.value;
+
+  void setTimerOn(bool value) => isTimerOn.value = value;
+
+  void selectPace(int seconds) => secondsPerQuestion.value = seconds;
+
 
   @override
   void onInit() {
@@ -104,6 +115,7 @@ class RoundSetupController extends GetxController {
         categoryIds: activeCategoryIds,
         questionCount: selectedCount.value,
         title: arguments.title,
+        secondsPerQuestion: isTimerOn.value ? secondsPerQuestion.value : null,
       ),
     );
   }
