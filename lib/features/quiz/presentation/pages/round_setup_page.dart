@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quiz_app/core/widgets/app_scaffold.dart';
 import 'package:quiz_app/features/categories/domain/entities/category.dart';
 import 'package:quiz_app/features/categories/presentation/widgets/category_avatar.dart';
 import 'package:quiz_app/features/quiz/presentation/controllers/round_setup_controller.dart';
@@ -22,7 +23,7 @@ class RoundSetupPage extends GetView<RoundSetupController> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(title: Text(controller.arguments.title)),
       body: SafeArea(
         child: Obx(() {

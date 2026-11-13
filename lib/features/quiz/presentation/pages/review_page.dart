@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/core/widgets/app_scaffold.dart';
 import 'package:quiz_app/features/quiz/domain/entities/round_result.dart';
 import 'package:quiz_app/features/quiz/presentation/widgets/review_question_card.dart';
 
@@ -9,7 +10,7 @@ class ReviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(title: const Text('Review answers')),
       body: SafeArea(
         child: ListView.builder(

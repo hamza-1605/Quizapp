@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/core/theme/app_colors.dart';
 import 'package:quiz_app/features/quiz/domain/entities/answer_option.dart';
 import 'package:quiz_app/features/quiz/domain/entities/question.dart';
 import 'package:quiz_app/features/quiz/presentation/widgets/answer_option_tile.dart';
@@ -25,8 +26,8 @@ class ReviewQuestionCard extends StatelessWidget {
       return (Icons.remove_circle_outline, scheme.outline);
     }
     return isCorrect
-        ? (Icons.check_circle, Colors.green.shade700)
-        : (Icons.cancel, Colors.red.shade700);
+        ? (Icons.check_circle, AppColors.correctLight)
+        : (Icons.cancel, AppColors.wrongLight);
   }
 
   AnswerOptionState _stateOf(AnswerOption option) {
@@ -69,8 +70,12 @@ class ReviewQuestionCard extends StatelessWidget {
             QuestionImage(url: imageUrl),
             const SizedBox(height: 12),
           ],
-          for (final option in question.options)
-            AnswerOptionTile(text: option.text, state: _stateOf(option)),
+          for (final (index, option) in question.options.indexed)
+            AnswerOptionTile(
+              label: String.fromCharCode(65 + index),
+              text: option.text, 
+              state: _stateOf(option)
+            ),
           if (explanation != null && explanation.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text('Explanation', style: theme.textTheme.titleSmall),

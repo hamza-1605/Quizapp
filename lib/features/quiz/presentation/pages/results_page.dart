@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quiz_app/core/widgets/app_scaffold.dart';
 import 'package:quiz_app/features/quiz/presentation/controllers/results_controller.dart';
 
 class ResultsPage extends GetView<ResultsController> {
@@ -19,7 +20,7 @@ class ResultsPage extends GetView<ResultsController> {
     final theme = Theme.of(context);
     final result = controller.result;
 
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(title: const Text('Results')),
       body: SafeArea(
         child: Center(

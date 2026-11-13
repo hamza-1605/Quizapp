@@ -1,69 +1,94 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/core/theme/app_colors.dart';
+import 'package:quiz_app/core/widgets/angle_pill_border.dart';
 
 enum AnswerOptionState { idle, selected, correct, wrong }
 
 class AnswerOptionTile extends StatelessWidget {
   const AnswerOptionTile({
     super.key,
+    required this.label,
     required this.text,
     required this.state,
     this.onTap,
   });
 
+  // The letter shown at the left: A, B, C, D.
+  final String label;
   final String text;
   final AnswerOptionState state;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final (background, accent, icon) = switch (state) {
+    final (Color fill, Color border, Color textColor, Color labelColor, IconData? icon)
+                                                                     = switch (state) {
       AnswerOptionState.idle => (
-          scheme.surface,
-          scheme.outline,
-          Icons.radio_button_unchecked,
+          AppColors.panel,
+          AppColors.outline,
+          Colors.white,
+          AppColors.gold,
+          null,
         ),
       AnswerOptionState.selected => (
-          scheme.primaryContainer,
-          scheme.primary,
-          Icons.radio_button_checked,
+          AppColors.gold,
+          AppColors.gold,
+          AppColors.navyDeep,
+          AppColors.navyDeep,
+          null,
         ),
       AnswerOptionState.correct => (
-          Colors.green.shade50,
-          Colors.green.shade700,
+          AppColors.correct,
+          AppColors.correctLight,
+          Colors.white,
+          Colors.white,
           Icons.check_circle,
         ),
       AnswerOptionState.wrong => (
-          Colors.red.shade50,
-          Colors.red.shade700,
+          AppColors.wrong,
+          AppColors.wrongLight,
+          Colors.white,
+          Colors.white,
           Icons.cancel,
         ),
     };
 
-    return Card(
-      elevation: 0,
-      color: background,
-      margin: const EdgeInsets.only(bottom: 12),
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: state == AnswerOptionState.idle
-              ? scheme.outlineVariant
-              : accent,
-          width: 1.5,
-        ),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Icon(icon, color: accent),
-              const SizedBox(width: 12),
-              Expanded(child: Text(text)),
-            ],
+    final shape = AnglePillBorder(side: BorderSide(color: border, width: 2));
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        color: fill,
+        shape: shape,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          customBorder: shape,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+            child: Row(
+              children: [
+                Text(
+                  '$label:',
+                  style: TextStyle(
+                    color: labelColor,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    text,
+                    style: TextStyle(color: textColor, fontSize: 16),
+                  ),
+                ),
+                if (icon != null) ...[
+                  const SizedBox(width: 8),
+                  Icon(icon, color: textColor),
+                ],
+              ],
+            ),
           ),
         ),
       ),

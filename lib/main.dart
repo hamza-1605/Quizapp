@@ -18,7 +18,7 @@ class QuizApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Quiz App',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
+      theme: AppTheme.dark,
       initialBinding: InitialBinding(),
       initialRoute: AppRoutes.home,
       getPages: AppPages.pages,

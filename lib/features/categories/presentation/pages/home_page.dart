@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quiz_app/core/widgets/app_scaffold.dart';
 import 'package:quiz_app/features/categories/presentation/controllers/home_controller.dart';
 import 'package:quiz_app/features/categories/presentation/widgets/category_tile.dart';
 import 'package:quiz_app/features/categories/presentation/widgets/round_mode_tile.dart';
@@ -14,7 +15,7 @@ class HomePage extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final sync = Get.find<SyncController>();
 
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(
         title: const Text('Quiz App'),
         actions: [
