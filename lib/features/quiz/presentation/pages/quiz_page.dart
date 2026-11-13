@@ -4,6 +4,7 @@ import 'package:quiz_app/features/quiz/domain/entities/answer_option.dart';
 import 'package:quiz_app/features/quiz/presentation/controllers/quiz_controller.dart';
 import 'package:quiz_app/features/quiz/presentation/widgets/answer_option_tile.dart';
 import 'package:quiz_app/features/quiz/presentation/widgets/question_image.dart';
+import 'package:quiz_app/core/utils/time_format.dart';
 
 class QuizPage extends GetView<QuizController> {
   const QuizPage({super.key});
@@ -46,7 +47,13 @@ class QuizPage extends GetView<QuizController> {
           if (!didPop) _confirmQuit(context);
         },
         child: Scaffold(
-          appBar: AppBar(title: Text(controller.appBarTitle)),
+          appBar: AppBar(
+            title: Text(controller.appBarTitle),
+            actions: [
+              if (controller.isTimed && controller.isRoundInProgress)
+                const _TimerBadge(),
+            ],
+          ),
           body: SafeArea(child: _buildBody()),
         ),
       ),
@@ -77,9 +84,15 @@ class _QuestionView extends GetView<QuizController> {
       final submitted = controller.isSubmitted.value;
       final hasSelection = controller.selectedOptionId.value != null;
 
-      final buttonLabel = !submitted
-          ? 'Submit'
-          : (controller.isLastQuestion ? 'Finish' : 'Next');
+      final isTimed = controller.isTimed;
+      final buttonLabel = isTimed || submitted
+          ? (controller.isLastQuestion ? 'Finish' : 'Next')
+          : 'Submit';
+      final VoidCallback? onPressed = isTimed
+          ? (hasSelection ? controller.answerAndNext : null)
+          : (submitted
+              ? controller.next
+              : (hasSelection ? controller.submit : null));
 
       return Column(
         children: [
@@ -120,10 +133,8 @@ class _QuestionView extends GetView<QuizController> {
             padding: const EdgeInsets.all(16),
             child: SizedBox(
               width: double.infinity,
-              child: FilledButton(
-                onPressed: submitted
-                    ? controller.next
-                    : (hasSelection ? controller.submit : null),
+               child: FilledButton(
+                onPressed: onPressed,
                 child: Text(buttonLabel),
               ),
             ),
@@ -198,5 +209,38 @@ class _ErrorView extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+
+class _TimerBadge extends GetView<QuizController> {
+  const _TimerBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Obx(() {
+      final seconds = controller.remainingSeconds.value;
+      final color =
+          seconds <= 10 ? theme.colorScheme.error : theme.colorScheme.onSurface;
+
+      return Padding(
+        padding: const EdgeInsets.only(right: 16),
+        child: Row(
+          children: [
+            Icon(Icons.timer_outlined, color: color),
+            const SizedBox(width: 4),
+            Text(
+              formatSeconds(seconds),
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: color,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

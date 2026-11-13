@@ -28,6 +28,15 @@ class ResultsPage extends GetView<ResultsController> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (result.timedOut) ...[
+                  Text(
+                    "Time's up!",
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: theme.colorScheme.error,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
                 Icon(
                   Icons.emoji_events_outlined,
                   size: 64,
@@ -44,6 +53,13 @@ class ResultsPage extends GetView<ResultsController> {
                   style: theme.textTheme.titleMedium,
                 ),
                 const SizedBox(height: 8),
+                if (result.unansweredCount > 0) ...[
+                Text(
+                    '${result.unansweredCount} unanswered',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 8),
+                ],
                 Text(
                   _message(result.percentage),
                   style: theme.textTheme.bodyLarge,

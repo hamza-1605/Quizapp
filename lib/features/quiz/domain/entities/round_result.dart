@@ -2,7 +2,15 @@ import 'package:quiz_app/features/quiz/domain/entities/question.dart';
 
 // What happened in a finished round.
 class RoundResult {
-  const RoundResult({required this.questions, required this.answers});
+  const RoundResult({
+    required this.questions,
+    required this.answers,
+    this.timedOut = false,
+  });
+
+  // True when the round ended because the time ran out.
+  final bool timedOut;
+  int get unansweredCount => total - answers.length;
 
   final List<Question> questions;
 
