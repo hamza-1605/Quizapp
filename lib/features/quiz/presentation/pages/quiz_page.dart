@@ -7,6 +7,7 @@ import 'package:quiz_app/features/quiz/presentation/controllers/quiz_controller.
 import 'package:quiz_app/features/quiz/presentation/widgets/answer_option_tile.dart';
 import 'package:quiz_app/features/quiz/presentation/widgets/question_image.dart';
 import 'package:quiz_app/core/utils/time_format.dart';
+import 'package:quiz_app/features/quiz/presentation/widgets/question_panel.dart';
 
 class QuizPage extends GetView<QuizController> {
   const QuizPage({super.key});
@@ -78,15 +79,13 @@ class _QuestionView extends GetView<QuizController> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Obx(() {
       final question = controller.currentQuestion;
       final imageUrl = question.imageUrl;
       final submitted = controller.isSubmitted.value;
       final hasSelection = controller.selectedOptionId.value != null;
-
       final isTimed = controller.isTimed;
+
       final buttonLabel = isTimed || submitted
           ? (controller.isLastQuestion ? 'Finish' : 'Next')
           : 'Submit';
@@ -98,9 +97,14 @@ class _QuestionView extends GetView<QuizController> {
 
       return Column(
         children: [
-          LinearProgressIndicator(
-            value: (controller.currentIndex.value + 1) /
-                controller.totalQuestions,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+            child: LinearProgressIndicator(
+              value: (controller.currentIndex.value + 1) /
+                  controller.totalQuestions,
+              minHeight: 6,
+              borderRadius: BorderRadius.circular(3),
+            ),
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -112,7 +116,7 @@ class _QuestionView extends GetView<QuizController> {
                     QuestionImage(url: imageUrl),
                     const SizedBox(height: 16),
                   ],
-                  Text(question.text, style: theme.textTheme.titleLarge),
+                  QuestionPanel(text: question.text),
                   const SizedBox(height: 24),
                   for (final (index, option) in question.options.indexed)
                     AnswerOptionTile(
@@ -133,10 +137,10 @@ class _QuestionView extends GetView<QuizController> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
             child: SizedBox(
               width: double.infinity,
-               child: FilledButton(
+              child: FilledButton(
                 onPressed: onPressed,
                 child: Text(buttonLabel),
               ),
@@ -157,18 +161,33 @@ class _Feedback extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final color = isCorrect ? AppColors.correctLight : AppColors.wrongLight;
     final text = explanation;
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 4),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.panel,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color, width: 1.5),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            isCorrect ? 'Correct!' : 'Not quite.',
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: isCorrect ? AppColors.correctLight : AppColors.wrongLight,
-            ),
+          Row(
+            children: [
+              Icon(isCorrect ? Icons.check_circle : Icons.cancel, color: color),
+              const SizedBox(width: 8),
+              Text(
+                isCorrect ? 'Correct!' : 'Incorrect.',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
           if (text != null && text.isNotEmpty) ...[
             const SizedBox(height: 8),
@@ -179,7 +198,6 @@ class _Feedback extends StatelessWidget {
     );
   }
 }
-
 
 class _ErrorView extends StatelessWidget {
   const _ErrorView({required this.message});
@@ -215,7 +233,6 @@ class _ErrorView extends StatelessWidget {
   }
 }
 
-
 class _TimerBadge extends GetView<QuizController> {
   const _TimerBadge();
 
@@ -225,19 +242,26 @@ class _TimerBadge extends GetView<QuizController> {
 
     return Obx(() {
       final seconds = controller.remainingSeconds.value;
-      final color =
-          seconds <= 10 ? theme.colorScheme.error : theme.colorScheme.onSurface;
+      final color = seconds <= 10 ? AppColors.wrongLight : AppColors.gold;
 
-      return Padding(
-        padding: const EdgeInsets.only(right: 16),
+      return Container(
+        margin: const EdgeInsets.only(right: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.navyDeep,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color, width: 1.5),
+        ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.timer_outlined, color: color),
-            const SizedBox(width: 4),
+            Icon(Icons.timer_outlined, size: 18, color: color),
+            const SizedBox(width: 6),
             Text(
               formatSeconds(seconds),
               style: theme.textTheme.titleMedium?.copyWith(
                 color: color,
+                fontWeight: FontWeight.w700,
                 fontFeatures: const [FontFeature.tabularFigures()],
               ),
             ),
