@@ -32,22 +32,7 @@ class QuestionImage extends StatelessWidget {
           child: CircularProgressIndicator(strokeWidth: 2),
         ),
         errorWidget: (context, url, error) => Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.image_not_supported_outlined,
-                color: scheme.onSurfaceVariant,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Image unavailable',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: scheme.onSurfaceVariant,
-                    ),
-              ),
-            ],
-          ),
+          child: Image.asset('assets/images/image_not_found.png')
         ),
       ),
     );
