@@ -8,7 +8,7 @@ class ResultsPage extends GetView<ResultsController> {
   const ResultsPage({super.key});
 
   String _message(int percentage) {
-    if (percentage == 100) return 'PEFRECTION!';
+    if (percentage == 100) return 'PERFECTION!';
     if (percentage >= 80) return 'Great job!';
     if (percentage >= 50) return 'Good effort!';
     if (percentage >= 30) return 'Keep on practicing.';
@@ -21,6 +21,14 @@ class ResultsPage extends GetView<ResultsController> {
     final theme = Theme.of(context);
     final result = controller.result;
 
+    if (result.percentage == 100) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          controller.launchConfetti(context);
+        }
+      });
+    } 
+    
     return AppScaffold(
       appBar: AppBar(title: const Text('Results')),
       body: SafeArea(
@@ -44,6 +52,7 @@ class ResultsPage extends GetView<ResultsController> {
                   size: 64,
                   color: theme.colorScheme.primary,
                 ),
+                // FilledButton(onPressed: () => {controller.confettiLaunched = false, controller.launchConfetti(context)}, child: Text("Launch")),
                 const SizedBox(height: 16),
                 Text(
                   '${result.correctCount} out of ${result.total} correct',
