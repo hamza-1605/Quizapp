@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/core/theme/app_colors.dart';
+import 'package:quiz_app/core/widgets/angle_pill_tile.dart';
 
-// A list entry that starts a special kind of round (Random, Custom).
+/// A list entry that starts a special kind of round (Random, Custom).
 class RoundModeTile extends StatelessWidget {
   const RoundModeTile({
     super.key,
@@ -17,17 +19,17 @@ class RoundModeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
-    return ListTile(
-      onTap: onTap,
+    return AnglePillTile(
       leading: CircleAvatar(
-        backgroundColor: scheme.secondaryContainer,
-        foregroundColor: scheme.onSecondaryContainer,
+        backgroundColor: AppColors.gold,
+        foregroundColor: AppColors.navyDeep,
         child: Icon(icon),
       ),
-      title: Text(title),
-      subtitle: Text(subtitle),
+      title: title,
+      subtitle: subtitle,
+      onTap: onTap,
+      borderColor: AppColors.gold,
+      titleColor: AppColors.gold,
     );
   }
 }

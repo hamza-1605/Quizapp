@@ -17,9 +17,10 @@ class QuestionImage extends StatelessWidget {
       height: _height,
       width: double.infinity,
       clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
+      
+      decoration: ShapeDecoration(
         color: scheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
+        shape: BeveledRectangleBorder( borderRadius: BorderRadius.circular(12), ) 
       ),
       child: CachedNetworkImage(
         imageUrl: url,

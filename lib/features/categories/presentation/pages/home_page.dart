@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quiz_app/core/theme/app_colors.dart';
 import 'package:quiz_app/core/widgets/app_scaffold.dart';
 import 'package:quiz_app/features/categories/presentation/controllers/home_controller.dart';
-import 'package:quiz_app/features/categories/presentation/widgets/category_tile.dart';
+import 'package:quiz_app/features/categories/presentation/widgets/category_card.dart';
 import 'package:quiz_app/features/categories/presentation/widgets/round_mode_tile.dart';
 import 'package:quiz_app/features/sync/presentation/controllers/sync_controller.dart';
 import 'package:quiz_app/features/sync/presentation/widgets/first_sync_view.dart';
@@ -42,12 +43,14 @@ class HomePage extends GetView<HomeController> {
             const SyncStatusBar(),
             Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.all(8),
                 itemCount: controller.categories.length + 1,
                 itemBuilder: (context, index) {
                   if (index < controller.categories.length) {
                     final category = controller.categories[index];
-                    return CategoryTile(
+                    return CategoryCard(
                       category: category,
+                      alignRight: index.isOdd,
                       onTap: () => controller.openCategory(category),
                     );
                   }
@@ -55,7 +58,20 @@ class HomePage extends GetView<HomeController> {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Divider(),
+                       Padding(
+                        padding: const EdgeInsets.fromLTRB(28, 20, 28, 6),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'MIXED ROUNDS',
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(
+                                  color: AppColors.textMuted,
+                                  letterSpacing: 1.4,
+                                ),
+                          ),
+                        ),
+                      ),
                       RoundModeTile(
                         icon: Icons.shuffle,
                         title: 'Random mix',

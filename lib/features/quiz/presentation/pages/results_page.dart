@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quiz_app/core/theme/app_colors.dart';
 import 'package:quiz_app/core/widgets/app_scaffold.dart';
 import 'package:quiz_app/features/quiz/presentation/controllers/results_controller.dart';
 
@@ -45,13 +46,16 @@ class ResultsPage extends GetView<ResultsController> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  '${result.percentage}%',
-                  style: theme.textTheme.displayMedium,
+                  '${result.correctCount} out of ${result.total} correct',
+                  style: theme.textTheme.titleMedium,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '${result.correctCount} of ${result.total} correct',
-                  style: theme.textTheme.titleMedium,
+                  '${result.percentage}%',
+                  style: theme.textTheme.displayLarge?.copyWith(
+                    color: AppColors.gold,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 if (result.unansweredCount > 0) ...[

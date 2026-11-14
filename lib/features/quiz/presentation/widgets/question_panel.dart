@@ -12,11 +12,11 @@ class QuestionPanel extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
-      decoration: ShapeDecoration(
+      decoration: const ShapeDecoration(
         color: AppColors.navyDeep,
         shape: BeveledRectangleBorder(
           side: BorderSide(color: AppColors.gold, width: 1),
-          borderRadius: BorderRadius.circular(10)
+          borderRadius: BorderRadiusGeometry.all(Radius.circular(10))
         )
       ),
       child: Text(

@@ -48,6 +48,7 @@ class ReviewQuestionCard extends StatelessWidget {
 
     return Card(
       elevation: 0,
+      color: AppColors.panel,
       margin: const EdgeInsets.only(bottom: 12),
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
@@ -55,6 +56,8 @@ class ReviewQuestionCard extends StatelessWidget {
         side: BorderSide(color: scheme.outlineVariant),
       ),
       child: ExpansionTile(
+        iconColor: AppColors.gold,
+        collapsedIconColor: AppColors.outline,
         shape: const Border(),
         collapsedShape: const Border(),
         leading: Icon(icon, color: color),
