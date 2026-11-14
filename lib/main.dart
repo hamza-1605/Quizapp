@@ -16,7 +16,7 @@ class QuizApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Quiz App',
+      title: 'Quirozity',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
       initialBinding: InitialBinding(),

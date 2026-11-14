@@ -18,7 +18,7 @@ class HomePage extends GetView<HomeController> {
 
     return AppScaffold(
       appBar: AppBar(
-        title: const Text('Quiz App'),
+        title: const Text('Quirozity'),
         actions: [
           Obx(() {
             // With no content, the first-launch screen has its own button.
