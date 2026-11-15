@@ -18,8 +18,7 @@ class FirstSyncView extends GetView<SyncController> {
           title: 'Getting your questions ready',
           body: controller.isServerSlow.value
               ? 'The server is waking up. This can take up to a minute.'
-              : 'Downloading the questions for the first time. '
-                  'This only happens once.',
+              : 'Downloading the questions for the first time. \nThis is a one time process.',
         );
       }
 
@@ -27,8 +26,7 @@ class FirstSyncView extends GetView<SyncController> {
         return _Message(
           icon: Icons.cloud_off_outlined,
           title: 'Connect to the internet',
-          body: 'The app needs to download the questions once. '
-              'After that, it works without internet.',
+          body: 'The app needs to download the questions once. \nAfter that, it works without internet.',
           detail: result.message,
           actionLabel: 'Try again',
           onAction: controller.sync,
@@ -80,20 +78,20 @@ class _Message extends StatelessWidget {
               const CircularProgressIndicator()
             else
               Icon(icon, size: 64, color: theme.colorScheme.primary),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             Text(
               title,
               style: theme.textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 24),
             Text(
               body,
               style: theme.textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
             if (detail != null) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: 24),
               Text(
                 detail!,
                 style: theme.textTheme.bodySmall?.copyWith(
