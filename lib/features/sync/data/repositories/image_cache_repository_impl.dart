@@ -5,7 +5,7 @@ import 'package:quiz_app/features/sync/domain/repositories/image_cache_repositor
 class ImageCacheRepositoryImpl implements ImageCacheRepository {
   ImageCacheRepositoryImpl(this._cacheManager);
 
-  static const _parallelDownloads = 3;
+  static const _parallelDownloads = 5;
   static const _downloadTimeout = Duration(seconds: 30);
 
   final CacheManager _cacheManager;
