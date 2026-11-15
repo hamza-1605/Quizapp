@@ -33,6 +33,21 @@ flutter:
   assets:
     - assets/images/
 
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+    - family: Cinzel
+      fonts:
+        - asset: assets/fonts/Cinzel-Bold.ttf
+          weight: 700
+
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
@@ -45,6 +60,10 @@ flutter_launcher_icons:
 flutter_native_splash:
   color: "#001050"
   image: assets/branding/splash_logo.png
+  branding: assets/branding/splash_branding.png
+  branding_mode: bottom
+  branding_bottom_padding: 48
   android_12:
     color: "#001050"
     image: assets/branding/icon_foreground.png
+    branding: assets/branding/splash_branding.png

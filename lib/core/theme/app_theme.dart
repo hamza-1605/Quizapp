@@ -23,10 +23,16 @@ abstract class AppTheme {
       error: AppColors.wrongLight,
     );
 
+    final textTheme = ThemeData(
+      brightness: Brightness.dark,
+      useMaterial3: true,
+    ).textTheme.apply(fontFamily: 'Poppins');
+
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: scheme,
+      textTheme: textTheme,
       // Every page draws its own background (see AppScaffold).
       scaffoldBackgroundColor: Colors.transparent,
       appBarTheme: const AppBarTheme(
