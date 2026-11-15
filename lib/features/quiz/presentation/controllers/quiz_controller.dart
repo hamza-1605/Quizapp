@@ -46,7 +46,7 @@ class QuizController extends GetxController {
     if (isLoading.value || errorMessage.value != null) {
       return arguments.title;
     }
-    return 'Question ${currentIndex.value + 1} of $totalQuestions';
+    return '${currentIndex.value + 1} of $totalQuestions';
   }
 
   @override

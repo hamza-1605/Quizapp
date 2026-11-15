@@ -1,23 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quiz_app/core/widgets/app_scaffold.dart';
-import 'package:quiz_app/features/categories/domain/entities/category.dart';
-import 'package:quiz_app/features/categories/presentation/widgets/category_avatar.dart';
 import 'package:quiz_app/features/quiz/presentation/controllers/round_setup_controller.dart';
 import 'package:quiz_app/core/utils/time_format.dart';
 
 class RoundSetupPage extends GetView<RoundSetupController> {
   const RoundSetupPage({super.key});
-
-  String _hint(int available) {
-    if (!controller.hasEnoughCategories) {
-      return 'Select at least ${RoundSetupController.minCustomCategories} categories.';
-    }
-    if (available < RoundSetupController.countOptions.first) {
-      return 'Only $available questions available so far.';
-    }
-    return '$available questions available';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +27,19 @@ class RoundSetupPage extends GetView<RoundSetupController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      if (controller.isCustom) ...[
+                        const _CategoryPicker(),
+                        const Divider(height: 30),
+                      ],
                       Text(
-                        'How many questions?',
+                        'Choose how many questions?',
                         style: theme.textTheme.titleMedium,
                       ),
                       const SizedBox(height: 12),
                       Wrap(
                         spacing: 12,
                         children: [
-                          for (final count
-                              in RoundSetupController.countOptions)
+                          for (final count in controller.countOptions)
                             ChoiceChip(
                               label: Text('$count'),
                               selected: controller.selectedCount.value == count,
@@ -58,20 +49,8 @@ class RoundSetupPage extends GetView<RoundSetupController> {
                             ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-                      Text(
-                        _hint(controller.availableCount),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
+                      const Divider(height: 36),
                       const _TimerSection(),
-                      if (controller.isCustom) ...[
-                        const Divider(),
-                        // const SizedBox(height: 12),
-                        const _CategoryPicker(),
-                      ],
                     ],
                   ),
                 ),
@@ -120,32 +99,32 @@ class _CategoryPicker extends GetView<RoundSetupController> {
               ),
             ],
           ),
-          for (final category in controller.arguments.selectableCategories)
-            _CategoryRow(category: category),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              !controller.hasEnoughCategories 
+              ? 'Select at least ${RoundSetupController.minCustomCategories} categories to continue.'
+              : '',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          Wrap(
+            spacing: 12,
+            runSpacing: 4,
+            children: [
+              for (final category in controller.arguments.selectableCategories)
+                ChoiceChip(
+                  label: Text(category.name),
+                  selected: controller.selectedCategoryIds.contains(category.id),
+                  onSelected: controller.categoryQuestionCount(category.id) > 0
+                      ? (_) => controller.toggleCategory(category.id)
+                      : null,
+                ),
+            ],
+          ),
         ],
-      ),
-    );
-  }
-}
-
-class _CategoryRow extends GetView<RoundSetupController> {
-  const _CategoryRow({required this.category});
-
-  final Category category;
-
-  @override
-  Widget build(BuildContext context) {
-    final count = controller.categoryQuestionCount(category.id);
-
-    return Obx(
-      () => CheckboxListTile(
-        contentPadding: EdgeInsets.zero,
-        value: controller.selectedCategoryIds.contains(category.id),
-        onChanged:
-            count > 0 ? (_) => controller.toggleCategory(category.id) : null,
-        secondary: CategoryAvatar(category: category),
-        title: Text(category.name),
-        subtitle: Text(count == 0 ? 'No questions yet' : '$count questions'),
       ),
     );
   }
@@ -164,14 +143,26 @@ class _TimerSection extends GetView<RoundSetupController> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text('Timer', style: theme.textTheme.titleMedium),
-            subtitle: const Text(
-              'Race the clock. You see the answers at the end.',
-            ),
-            value: isOn,
-            onChanged: controller.setTimerOn,
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Timer', style: theme.textTheme.titleMedium),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Race the clock. You see the answers at the end.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
+              Switch(value: isOn, onChanged: controller.setTimerOn),
+            ],
           ),
           if (isOn) ...[
             const SizedBox(height: 8),
@@ -189,12 +180,15 @@ class _TimerSection extends GetView<RoundSetupController> {
               ],
             ),
             const SizedBox(height: 8),
-            Text(
-              'Total time: ${formatSeconds(controller.totalSeconds)}',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+            if (controller.hasEnoughCategories &&
+              controller.selectedCount.value > 0) ...[
+              Text(
+                'Total time: ${formatSeconds(controller.totalSeconds)}',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
-            ),
+            ]
           ],
         ],
       );

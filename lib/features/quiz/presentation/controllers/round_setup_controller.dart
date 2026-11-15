@@ -7,9 +7,8 @@ import 'package:quiz_app/features/quiz/presentation/models/round_setup_arguments
 class RoundSetupController extends GetxController {
   RoundSetupController(this._getQuestionCountsUsecase, this.arguments);
 
-  static const countOptions = [10, 20, 30];
   static const minCustomCategories = 2;
-  static const paceOptions = [6, 10, 12, 15]; // seconds per question
+  static const paceOptions = [3, 6, 10, 12]; // seconds per question
 
   final GetQuestionCountsUsecase _getQuestionCountsUsecase;
   final RoundSetupArguments arguments;
@@ -17,9 +16,14 @@ class RoundSetupController extends GetxController {
   final isLoading = true.obs;
   final counts = <int, int>{}.obs; // category id -> number of questions
   final selectedCategoryIds = <int>{}.obs; // custom rounds only
-  final selectedCount = 10.obs;
+  final selectedCount = 0.obs;
   final isTimerOn = false.obs;    // timer options
-  final secondsPerQuestion = 12.obs;
+  final secondsPerQuestion = 6.obs;
+
+  /// 50 questions are offered only for rounds that mix categories.
+  bool get isMixed => isCustom || arguments.categoryIds.length > 1;
+
+  List<int> get countOptions => [10, 20, 30, if (isMixed) 50, if (isMixed) 100];
 
   bool get isCustom => arguments.isCustom;
 
@@ -36,6 +40,7 @@ class RoundSetupController extends GetxController {
   bool get canStart =>
       !isLoading.value &&
       hasEnoughCategories &&
+      selectedCount > 0 &&
       isAvailable(selectedCount.value);
 
   List<int> get _selectableIds => arguments.selectableCategories
@@ -101,10 +106,7 @@ class RoundSetupController extends GetxController {
   /// still fits, so the selected chip is never a greyed-out one.
   void _keepCountValid() {
     if (isAvailable(selectedCount.value)) return;
-    selectedCount.value = countOptions.lastWhere(
-      isAvailable,
-      orElse: () => countOptions.first,
-    );
+    selectedCount.value = countOptions.lastWhere(isAvailable, orElse: () => 0);
   }
 
   void start() {
