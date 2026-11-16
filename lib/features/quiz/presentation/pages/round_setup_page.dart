@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quiz_app/core/widgets/app_scaffold.dart';
+import 'package:quiz_app/core/widgets/game_button.dart';
 import 'package:quiz_app/features/quiz/presentation/controllers/round_setup_controller.dart';
 import 'package:quiz_app/core/utils/time_format.dart';
 
@@ -59,10 +60,12 @@ class RoundSetupPage extends GetView<RoundSetupController> {
                 padding: const EdgeInsets.all(24),
                 child: SizedBox(
                   width: double.infinity,
-                  child: FilledButton(
+                  child: GameButton(
+                    style: GameButtonStyle.secondary,
+                    label: 'Start',
+                    icon: Icons.play_arrow_rounded,
                     onPressed: controller.canStart ? controller.start : null,
-                    child: const Text('Start'),
-                  ),
+                  )
                 ),
               ),
             ],

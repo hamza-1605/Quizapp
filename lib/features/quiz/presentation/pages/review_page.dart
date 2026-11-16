@@ -13,9 +13,10 @@ class ReviewPage extends StatelessWidget {
     return AppScaffold(
       appBar: AppBar(title: const Text('Review answers')),
       body: SafeArea(
-        child: ListView.builder(
+        child: ListView.separated(
           padding: const EdgeInsets.all(16),
           itemCount: result.questions.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 10),
           itemBuilder: (context, index) {
             final question = result.questions[index];
             return ReviewQuestionCard(

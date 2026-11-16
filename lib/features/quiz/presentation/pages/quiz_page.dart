@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quiz_app/core/theme/app_colors.dart';
 import 'package:quiz_app/core/widgets/app_scaffold.dart';
+import 'package:quiz_app/core/widgets/game_button.dart';
 import 'package:quiz_app/features/quiz/domain/entities/answer_option.dart';
 import 'package:quiz_app/features/quiz/presentation/controllers/quiz_controller.dart';
 import 'package:quiz_app/features/quiz/presentation/widgets/answer_option_tile.dart';
@@ -139,10 +140,11 @@ class _QuestionView extends GetView<QuizController> {
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
             child: SizedBox(
-              width: double.infinity,
-              child: FilledButton(
+              width: 200,
+              child: GameButton(
+                style: GameButtonStyle.secondary,
                 onPressed: onPressed,
-                child: Text(buttonLabel),
+                label: buttonLabel,
               ),
             ),
           ),

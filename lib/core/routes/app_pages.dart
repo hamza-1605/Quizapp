@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:quiz_app/features/categories/presentation/bindings/home_binding.dart';
+import 'package:quiz_app/features/categories/presentation/pages/categories_page.dart';
 import 'package:quiz_app/features/categories/presentation/pages/home_page.dart';
 import 'package:quiz_app/core/routes/app_routes.dart';
 import 'package:quiz_app/features/quiz/domain/entities/round_result.dart';
@@ -10,6 +11,7 @@ import 'package:quiz_app/features/quiz/presentation/pages/quiz_page.dart';
 import 'package:quiz_app/features/quiz/presentation/pages/results_page.dart';
 import 'package:quiz_app/features/quiz/presentation/pages/review_page.dart';
 import 'package:quiz_app/features/quiz/presentation/pages/round_setup_page.dart';
+import 'package:quiz_app/features/settings/presentation/pages/settings_page.dart';
 
 abstract class AppPages {
   static final pages = <GetPage<dynamic>>[
@@ -19,6 +21,9 @@ abstract class AppPages {
       page: () => const HomePage(),
       binding: HomeBinding(),
     ),
+
+    GetPage(name: AppRoutes.categories, page: () => const CategoriesPage()),
+    GetPage(name: AppRoutes.settings, page: () => const SettingsPage()),
 
     GetPage(
       name: AppRoutes.roundSetup,

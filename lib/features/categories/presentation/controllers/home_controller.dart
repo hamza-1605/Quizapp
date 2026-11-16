@@ -14,21 +14,40 @@ class HomeController extends GetxController {
 
   final categories = <Category>[].obs;
   final isLoading = true.obs;
+  final isFirstRun = false.obs;
+  
+  /// True while the first launch is being set up: no content yet, or still
+  /// syncing or downloading images on a first run.
+  bool get showSetup =>
+      categories.isEmpty ||
+      (isFirstRun.value &&
+          (_syncController.isSyncing.value || _syncController.isDownloadingImages.value));
 
   @override
   void onInit() {
     super.onInit();
-    loadCategories();
+    _initialLoad();
     // When a sync brings new content, show it.
     ever(_syncController.lastResult, (result) {
       if (result is SyncUpdated) loadCategories();
     });
+    // When the first image download ends, the normal home screen takes over.
+    ever(_syncController.isDownloadingImages, (isDownloading) {
+      if (!isDownloading) isFirstRun.value = false;
+    });
   }
 
-  Future<void> loadCategories() async {
-    if (categories.isEmpty) isLoading.value = true; // spinner on first load only
+  void skipImageWait() => isFirstRun.value = false;
+
+
+   Future<void> loadCategories() async {
+    categories.assignAll(await _getCategoriesUsecase());
+  }
+
+  Future<void> _initialLoad() async {
     try {
-      categories.assignAll(await _getCategoriesUsecase());
+      await loadCategories();
+      isFirstRun.value = categories.isEmpty;
     } 
     finally {
       isLoading.value = false;

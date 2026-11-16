@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quiz_app/core/theme/app_colors.dart';
 import 'package:quiz_app/core/widgets/app_scaffold.dart';
+import 'package:quiz_app/core/widgets/game_button.dart';
 import 'package:quiz_app/features/quiz/presentation/controllers/results_controller.dart';
 
 class ResultsPage extends GetView<ResultsController> {
@@ -52,7 +53,6 @@ class ResultsPage extends GetView<ResultsController> {
                   size: 64,
                   color: theme.colorScheme.primary,
                 ),
-                // FilledButton(onPressed: () => {controller.confettiLaunched = false, controller.launchConfetti(context)}, child: Text("Launch")),
                 const SizedBox(height: 16),
                 Text(
                   '${result.correctCount} out of ${result.total} correct',
@@ -79,25 +79,42 @@ class ResultsPage extends GetView<ResultsController> {
                   style: theme.textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 32),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: controller.playAgain,
-                    child: const Text('Play again'),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: GameButton(
+                          style: GameButtonStyle.secondary,
+                          onPressed: controller.playAgain,
+                          label: 'Play again',
+                          icon: Icons.replay,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                      SizedBox(
+                        width: double.infinity,
+                        child: GameButton(
+                          style: GameButtonStyle.secondary,
+                          onPressed: controller.openReview,
+                          label: 'Review answers',
+                          icon: Icons.description_outlined,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                      GameButton(
+                        style: GameButtonStyle.secondary,
+                        onPressed: controller.backToHome,
+                        label: 'Back to home',
+                        icon: Icons.home,
+                        fontSize: 15,
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: controller.openReview,
-                    child: const Text('Review answers'),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextButton(
-                  onPressed: controller.backToHome,
-                  child: const Text('Back to home'),
                 ),
               ],
             ),

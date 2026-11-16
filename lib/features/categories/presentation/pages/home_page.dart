@@ -1,105 +1,142 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:quiz_app/core/routes/app_routes.dart';
 import 'package:quiz_app/core/theme/app_colors.dart';
 import 'package:quiz_app/core/widgets/app_scaffold.dart';
+import 'package:quiz_app/core/widgets/game_button.dart';
 import 'package:quiz_app/features/categories/presentation/controllers/home_controller.dart';
-import 'package:quiz_app/features/categories/presentation/widgets/category_card.dart';
-import 'package:quiz_app/features/categories/presentation/widgets/round_mode_tile.dart';
-import 'package:quiz_app/features/sync/presentation/controllers/sync_controller.dart';
 import 'package:quiz_app/features/sync/presentation/widgets/first_sync_view.dart';
 import 'package:quiz_app/features/sync/presentation/widgets/sync_status_bar.dart';
 
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    final sync = Get.find<SyncController>();
-
-    return AppScaffold(
-      appBar: AppBar(
-        title: Text(
-          'Quirozity',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontFamily: 'Cinzel',
-            fontWeight: FontWeight.w700,
-            color: AppColors.gold,
-            letterSpacing: 2,
-          ),
-        ),
+  Future<void> _confirmExit(BuildContext context) async {
+    final exit = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Exit Quirozity?'),
         actions: [
-          Obx(() {
-            // With no content, the first-launch screen has its own button.
-            if (controller.categories.isEmpty) return const SizedBox.shrink();
-            return IconButton(
-              icon: const Icon(Icons.refresh),
-              tooltip: 'Check for updates',
-              onPressed: sync.isBusy ? null : sync.sync,
-            );
-          }),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Stay'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Exit'),
+          ),
         ],
       ),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (controller.categories.isEmpty) {
-          return const FirstSyncView();
-        }
-        return Column(
-          children: [
-            const SyncStatusBar(),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                itemCount: controller.categories.length + 1,
-                itemBuilder: (context, index) {
-                  if (index < controller.categories.length) {
-                    final category = controller.categories[index];
-                    return CategoryCard(
-                      category: category,
-                      alignRight: index.isOdd,
-                      onTap: () => controller.openCategory(category),
-                    );
-                  }
-                  // After the categories: the special round types.
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                       Padding(
-                        padding: const EdgeInsets.fromLTRB(28, 20, 28, 6),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'MIXED ROUNDS',
-                            style: Theme.of(context).textTheme.labelSmall
-                                ?.copyWith(
-                                  color: AppColors.textMuted,
-                                  letterSpacing: 1.4,
-                                ),
-                          ),
-                        ),
+    );
+    if (exit == true) await SystemNavigator.pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return AppScaffold(
+      body: SafeArea(
+                child: Obx(() {
+          final Widget content;
+          if (controller.isLoading.value) {
+            // The very first read of the database: a blank navy frame, which
+            // continues the splash screen instead of flashing a spinner.
+            content = const SizedBox.shrink(key: ValueKey('loading'));
+          } 
+          else if (controller.showSetup) {
+            content = FirstSyncView(
+              key: const ValueKey('setup'),
+              onSkipImages: controller.skipImageWait,
+            );
+          } else {
+            content = _Hub(
+              key: const ValueKey('hub'),
+              onExit: () => _confirmExit(context),
+            );
+          }
+
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            layoutBuilder: (current, previous) => Stack(
+              fit: StackFit.expand,
+              children: [...previous, ?current],
+            ),
+            child: content,
+          );
+        }),
+      ),
+    );
+  }
+}
+
+
+class _Hub extends StatelessWidget {
+  const _Hub({ super.key, required this.onExit});
+
+  final VoidCallback onExit;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      children: [
+        Expanded(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 360),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset('assets/branding/logo.png', height: 190),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Quirozity',
+                      style: theme.textTheme.displaySmall?.copyWith(
+                        fontFamily: 'Cinzel',
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.gold,
+                        letterSpacing: 3,
                       ),
-                      RoundModeTile(
-                        icon: Icons.shuffle,
-                        title: 'Random mix',
-                        subtitle: 'Questions from all categories',
-                        onTap: controller.openRandomRound,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Quiz your Curiosity.',
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: AppColors.textMuted,
                       ),
-                      RoundModeTile(
-                        icon: Icons.tune,
-                        title: 'Custom quiz',
-                        subtitle: 'Pick your own categories',
-                        onTap: controller.openCustomRound,
-                      ),
-                    ],
-                  );
-                },
+                    ),
+                    const SizedBox(height: 48),
+                    GameButton(
+                      label: 'Play',
+                      icon: Icons.play_arrow_rounded,
+                      onPressed: () => Get.toNamed(AppRoutes.categories),
+                    ),
+                    const SizedBox(height: 16),
+                    GameButton(
+                      label: 'Settings',
+                      icon: Icons.settings_outlined,
+                      style: GameButtonStyle.secondary,
+                      onPressed: () => Get.toNamed(AppRoutes.settings),
+                    ),
+                    const SizedBox(height: 16),
+                    GameButton(
+                      label: 'Exit',
+                      icon: Icons.exit_to_app,
+                      style: GameButtonStyle.secondary,
+                      onPressed: onExit,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
-        );
-      }),
+          ),
+        ),
+        const SyncStatusBar(),
+      ],
     );
   }
 }
