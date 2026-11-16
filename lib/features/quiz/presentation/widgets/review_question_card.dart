@@ -61,27 +61,31 @@ class ReviewQuestionCard extends StatelessWidget {
         shape: const Border(),
         collapsedShape: const Border(),
         leading: Icon(icon, color: color),
-        title: Text('$number. ${question.text}'),
+        title: Text('$number. ${question.text}', style: theme.textTheme.bodyMedium ),
         subtitle: Text(
           chosen == null ? 'Not answered' : 'Your answer: ${chosen.text}',
-          style: theme.textTheme.bodySmall?.copyWith(color: color),
+          style: theme.textTheme.labelSmall?.copyWith(color: color),
         ),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 4),
           if (imageUrl != null && imageUrl.isNotEmpty) ...[
             QuestionImage(url: imageUrl),
             const SizedBox(height: 12),
           ],
           for (final (index, option) in question.options.indexed)
-            AnswerOptionTile(
-              label: String.fromCharCode(65 + index),
-              text: option.text, 
-              state: _stateOf(option)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: AnswerOptionTile(
+                label: String.fromCharCode(65 + index),
+                text: option.text, 
+                state: _stateOf(option)
+              ),
             ),
           if (explanation != null && explanation.isNotEmpty) ...[
             const SizedBox(height: 4),
-            Text('Explanation', style: theme.textTheme.titleSmall),
+            Text('Explanation', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600)),
             const SizedBox(height: 4),
             Text(explanation, style: theme.textTheme.bodyMedium),
           ],
