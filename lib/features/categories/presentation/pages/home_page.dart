@@ -7,7 +7,6 @@ import 'package:quiz_app/core/widgets/app_scaffold.dart';
 import 'package:quiz_app/core/widgets/game_button.dart';
 import 'package:quiz_app/features/categories/presentation/controllers/home_controller.dart';
 import 'package:quiz_app/features/sync/presentation/widgets/first_sync_view.dart';
-import 'package:quiz_app/features/sync/presentation/widgets/sync_status_bar.dart';
 
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
@@ -113,7 +112,7 @@ class _Hub extends StatelessWidget {
                     GameButton(
                       label: 'Play',
                       icon: Icons.play_arrow_rounded,
-                      onPressed: () => Get.toNamed(AppRoutes.categories),
+                      onPressed: () => Get.toNamed(AppRoutes.play),
                     ),
                     const SizedBox(height: 16),
                     GameButton(
@@ -135,7 +134,6 @@ class _Hub extends StatelessWidget {
             ),
           ),
         ),
-        const SyncStatusBar(),
       ],
     );
   }

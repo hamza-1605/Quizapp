@@ -1,6 +1,8 @@
 abstract class AppRoutes {
   static const home = '/';
 
+  static const play = '/play';
+
   static const categories = '/categories';
 
   static const settings = '/settings';
