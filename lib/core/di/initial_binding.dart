@@ -5,6 +5,10 @@ import 'package:quiz_app/features/categories/data/datasources/category_local_dat
 import 'package:quiz_app/features/categories/data/repositories/category_repository_impl.dart';
 import 'package:quiz_app/features/categories/domain/repositories/category_repository.dart';
 import 'package:quiz_app/features/categories/domain/usecases/get_categories_usecase.dart';
+import 'package:quiz_app/features/feedback/data/datasources/feedback_remote_data_source.dart';
+import 'package:quiz_app/features/feedback/data/repositories/feedback_repository_impl.dart';
+import 'package:quiz_app/features/feedback/domain/repositories/feedback_repository.dart';
+import 'package:quiz_app/features/feedback/domain/usecases/submit_feedback_usecase.dart';
 import 'package:quiz_app/features/quiz/domain/usecases/get_question_counts_usecase.dart';
 import 'package:quiz_app/features/settings/data/datasources/settings_local_data_source.dart';
 import 'package:quiz_app/features/settings/data/respositories/settings_repositories_impl.dart';
@@ -127,6 +131,16 @@ class InitialBinding extends Bindings {
         Get.find<GetSoundEnabledUsecase>(),
         Get.find<SetSoundEnabledUsecase>(),
       ),
+      permanent: true,
+    );
+
+    // Feedback
+    Get.put<FeedbackRepository>(
+      FeedbackRepositoryImpl(FeedbackRemoteDataSource(Get.find<http.Client>())),
+      permanent: true,
+    );
+    Get.put<SubmitFeedbackUsecase>(
+      SubmitFeedbackUsecase(Get.find<FeedbackRepository>()),
       permanent: true,
     );
   }

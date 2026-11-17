@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quiz_app/core/theme/app_colors.dart';
 import 'package:quiz_app/core/widgets/app_scaffold.dart';
+import 'package:quiz_app/features/feedback/presentation/widgets/feedback_sheet.dart';
 import 'package:quiz_app/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:quiz_app/features/sync/presentation/controllers/sync_controller.dart';
 import 'package:quiz_app/features/sync/presentation/widgets/sync_status_bar.dart';
@@ -31,7 +32,9 @@ class SettingsPage extends GetView<SettingsController> {
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+
+
+            const SizedBox(height: 36),
             const _SectionTitle('Content'),
             _Panel(
               child: Column(
@@ -51,7 +54,33 @@ class SettingsPage extends GetView<SettingsController> {
               ),
             ),
 
-            
+
+            const SizedBox(height: 36),
+            const _SectionTitle('Feedback'),
+            _Panel(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "If you want to suggest any change, correction or any other type of improvement, you can give me a feedback.",
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      )
+                    ),
+                    const SizedBox(height: 8,),
+                    OutlinedButton.icon(
+                      onPressed: () => showFeedbackSheet(),
+                      icon: const Icon(Icons.chat_bubble_outline),
+                      label: const Text('Send feedback'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+
             const SizedBox(height: 36),
             const _SectionTitle('About'),
             Text('Quirozity', style: theme.textTheme.titleMedium),

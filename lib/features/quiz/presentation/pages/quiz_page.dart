@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:quiz_app/core/theme/app_colors.dart';
 import 'package:quiz_app/core/widgets/app_scaffold.dart';
 import 'package:quiz_app/core/widgets/game_button.dart';
+import 'package:quiz_app/features/feedback/presentation/widgets/feedback_sheet.dart';
 import 'package:quiz_app/features/quiz/domain/entities/answer_option.dart';
 import 'package:quiz_app/features/quiz/presentation/controllers/quiz_controller.dart';
 import 'package:quiz_app/features/quiz/presentation/widgets/answer_option_tile.dart';
@@ -132,6 +133,7 @@ class _QuestionView extends GetView<QuizController> {
                     _Feedback(
                       isCorrect: controller.isCurrentAnswerCorrect,
                       explanation: question.explanation,
+                      onReport: () => showFeedbackSheet(question: question),
                     ),
                 ],
               ),
@@ -155,10 +157,11 @@ class _QuestionView extends GetView<QuizController> {
 }
 
 class _Feedback extends StatelessWidget {
-  const _Feedback({required this.isCorrect, this.explanation});
+  const _Feedback({required this.isCorrect, this.explanation, required this.onReport});
 
   final bool isCorrect;
   final String? explanation;
+  final VoidCallback onReport;
 
   @override
   Widget build(BuildContext context) {
@@ -195,6 +198,14 @@ class _Feedback extends StatelessWidget {
             const SizedBox(height: 8),
             Text(text, style: theme.textTheme.bodyMedium),
           ],
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: onReport,
+              icon: const Icon(Icons.flag_outlined, size: 18),
+              label: const Text('Report a problem'),
+            ),
+          ),
         ],
       ),
     );

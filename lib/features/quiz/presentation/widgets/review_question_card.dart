@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/core/theme/app_colors.dart';
+import 'package:quiz_app/features/feedback/presentation/widgets/feedback_sheet.dart';
 import 'package:quiz_app/features/quiz/domain/entities/answer_option.dart';
 import 'package:quiz_app/features/quiz/domain/entities/question.dart';
 import 'package:quiz_app/features/quiz/presentation/widgets/answer_option_tile.dart';
@@ -89,6 +90,14 @@ class ReviewQuestionCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(explanation, style: theme.textTheme.bodyMedium),
           ],
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: () => showFeedbackSheet(question: question),
+              icon: const Icon(Icons.flag_outlined, size: 18),
+              label: const Text('Report a problem'),
+            ),
+          ),
         ],
       ),
     );
