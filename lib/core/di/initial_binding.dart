@@ -6,6 +6,12 @@ import 'package:quiz_app/features/categories/data/repositories/category_reposito
 import 'package:quiz_app/features/categories/domain/repositories/category_repository.dart';
 import 'package:quiz_app/features/categories/domain/usecases/get_categories_usecase.dart';
 import 'package:quiz_app/features/quiz/domain/usecases/get_question_counts_usecase.dart';
+import 'package:quiz_app/features/settings/data/datasources/settings_local_data_source.dart';
+import 'package:quiz_app/features/settings/data/respositories/settings_repositories_impl.dart';
+import 'package:quiz_app/features/settings/domain/repositories/settings_repository.dart';
+import 'package:quiz_app/features/settings/domain/usecases/get_sound_enabled_usecase.dart';
+import 'package:quiz_app/features/settings/domain/usecases/set_sound_enabled_usecase.dart';
+import 'package:quiz_app/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:quiz_app/features/sync/data/datasources/sync_local_data_source.dart';
 import 'package:quiz_app/features/sync/data/datasources/sync_remote_data_source.dart';
 import 'package:quiz_app/features/sync/data/repositories/sync_repository_impl.dart';
@@ -92,11 +98,34 @@ class InitialBinding extends Bindings {
       permanent: true,
     );
     
+    // Sync Content
     Get.put<SyncController>(
       SyncController(
         syncContentUsecase: Get.find<SyncContentUsecase>(),
         getLastCheckedAtUsecase: Get.find<GetLastCheckedAtUsecase>(),
         prefetchImagesUsecase: Get.find<PrefetchImagesUsecase>(),
+      ),
+      permanent: true,
+    );
+
+
+    // Settings
+    Get.put<SettingsRepository>(
+      SettingsRepositoryImpl(SettingsLocalDataSource(Get.find<AppDatabase>())),
+      permanent: true,
+    );
+    Get.put<GetSoundEnabledUsecase>(
+      GetSoundEnabledUsecase(Get.find<SettingsRepository>()),
+      permanent: true,
+    );
+    Get.put<SetSoundEnabledUsecase>(
+      SetSoundEnabledUsecase(Get.find<SettingsRepository>()),
+      permanent: true,
+    );
+    Get.put<SettingsController>(
+      SettingsController(
+        Get.find<GetSoundEnabledUsecase>(),
+        Get.find<SetSoundEnabledUsecase>(),
       ),
       permanent: true,
     );
