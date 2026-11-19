@@ -56,7 +56,7 @@ class CategoryCard extends StatelessWidget {
                 cacheManager: AppImageCache.instance,
                 fit: BoxFit.cover,
                 memCacheWidth: 900,
-                fadeInDuration: const Duration(milliseconds: 150),
+                fadeInDuration: const Duration(milliseconds: 0),
                 placeholder: (context, url) => fallback,
                 errorWidget: (context, url, error) => fallback,
               )
