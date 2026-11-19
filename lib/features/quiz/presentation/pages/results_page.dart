@@ -31,7 +31,6 @@ class ResultsPage extends GetView<ResultsController> {
     } 
     
     return AppScaffold(
-      appBar: AppBar(title: const Text('Results')),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
