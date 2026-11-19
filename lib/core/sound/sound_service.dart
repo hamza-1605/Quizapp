@@ -25,14 +25,22 @@ class SoundService {
   final SettingsController _settings;
   final Map<Sfx, AudioPool> _pools = {};
 
-  // Prepares a pool of ready players for each sound. Never throws: a
-  // missing file just means that sound stays silent.
+  // Prepares a pool of ready players for each sound.
   Future<void> init() async {
+    // Configure audio focus before creating the pools.
+    await AudioPlayer.global.setAudioContext(
+      AudioContextConfig(
+        focus: AudioContextConfigFocus.mixWithOthers,
+      ).build(),
+    );
+
     for (final sfx in Sfx.values) {
       try {
         _pools[sfx] = await AudioPool.createFromAsset(
           path: sfx.assetPath,
           maxPlayers: sfx.maxPlayers,
+          minPlayers: sfx.maxPlayers,
+          playerMode: PlayerMode.mediaPlayer,
         );
       } on Object catch (e) {
         debugPrint('Sound ${sfx.name} could not be loaded: $e');
