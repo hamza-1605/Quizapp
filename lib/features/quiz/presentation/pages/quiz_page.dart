@@ -147,6 +147,7 @@ class _QuestionView extends GetView<QuizController> {
                 style: GameButtonStyle.secondary,
                 onPressed: onPressed,
                 label: buttonLabel,
+                playsSound: false,
               ),
             ),
           ),
