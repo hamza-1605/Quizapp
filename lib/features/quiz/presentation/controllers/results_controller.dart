@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_confetti/flutter_confetti.dart';
 import 'package:get/get.dart';
 import 'package:quiz_app/core/routes/app_routes.dart';
+import 'package:quiz_app/core/sound/sound_service.dart';
 import 'package:quiz_app/features/quiz/domain/entities/round_result.dart';
 import 'package:quiz_app/features/quiz/presentation/models/results_arguments.dart';
 
@@ -17,6 +18,7 @@ class ResultsController extends GetxController {
     if (confettiLaunched) return;
 
     confettiLaunched = true;
+    Get.find<SoundService>().play(Sfx.celebrate);
 
     Confetti.launch(
       context,

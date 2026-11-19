@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/core/sound/sound_service.dart';
 import 'package:quiz_app/core/theme/app_colors.dart';
 import 'package:quiz_app/core/widgets/angle_pill_border.dart';
 
@@ -74,7 +75,12 @@ class _GameButtonState extends State<GameButton> {
                   : null,
             ),
             child: InkWell(
-              onTap: widget.onPressed,
+              onTap: widget.onPressed == null
+                  ? null
+                  : () {
+                      playClick();
+                      widget.onPressed!();
+                    },
               onHighlightChanged: (value) => setState(() => _pressed = value),
               child: Center(
                 child: Row(

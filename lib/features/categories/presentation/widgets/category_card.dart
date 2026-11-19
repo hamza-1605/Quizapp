@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/core/cache/app_image_cache.dart';
+import 'package:quiz_app/core/sound/sound_service.dart';
 import 'package:quiz_app/core/theme/app_colors.dart';
 import 'package:quiz_app/core/utils/color_utils.dart';
 import 'package:quiz_app/features/categories/domain/entities/category.dart';
@@ -105,7 +106,14 @@ class CategoryCard extends StatelessWidget {
             Positioned.fill(
               child: Material(
                 type: MaterialType.transparency,
-                child: InkWell(onTap: onTap),
+                child: InkWell(
+                  onTap: onTap == null
+                    ? null
+                    : () {
+                        playClick();
+                        onTap!();
+                      },
+                ),
               ),
             ),
           ],

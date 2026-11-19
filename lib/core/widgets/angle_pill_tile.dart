@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/core/sound/sound_service.dart';
 import 'package:quiz_app/core/theme/app_colors.dart';
 import 'package:quiz_app/core/widgets/angle_pill_border.dart';
 
@@ -37,7 +38,12 @@ class AnglePillTile extends StatelessWidget {
         shape: shape,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: onTap,
+          onTap: onTap == null
+            ? null
+            : () {
+                playClick();
+                onTap!();
+              },
           customBorder: shape,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 10),

@@ -26,7 +26,7 @@ class SettingsPage extends GetView<SettingsController> {
               child: Obx(
                 () => _SettingRow(
                   title: 'Sound effects',
-                  subtitle: 'The sounds themselves arrive in a later update.',
+                  subtitle: 'Answers, buttons, timer and celebration.',
                   value: controller.isSoundOn.value,
                   onChanged: controller.setSound,
                 ),

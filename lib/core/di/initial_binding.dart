@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:quiz_app/core/database/app_database.dart';
+import 'package:quiz_app/core/sound/sound_service.dart';
 import 'package:quiz_app/features/categories/data/datasources/category_local_data_source.dart';
 import 'package:quiz_app/features/categories/data/repositories/category_repository_impl.dart';
 import 'package:quiz_app/features/categories/domain/repositories/category_repository.dart';
@@ -133,6 +136,12 @@ class InitialBinding extends Bindings {
       ),
       permanent: true,
     );
+    
+    // Sound Service
+    final soundService = SoundService(Get.find<SettingsController>());
+    unawaited(soundService.init());
+    Get.put<SoundService>(soundService, permanent: true);
+
 
     // Feedback
     Get.put<FeedbackRepository>(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:quiz_app/core/routes/app_routes.dart';
+import 'package:quiz_app/core/sound/sound_service.dart';
 import 'package:quiz_app/features/quiz/domain/entities/question.dart';
 import 'package:quiz_app/features/quiz/domain/entities/round_result.dart';
 import 'package:quiz_app/features/quiz/domain/usecases/build_round_usecase.dart';
@@ -48,6 +49,12 @@ class QuizController extends GetxController {
     }
     return '${currentIndex.value + 1} of $totalQuestions';
   }
+
+   SoundService get _sound => Get.find<SoundService>();
+
+  /// Ticking starts when this many seconds are left. A huge number means
+  /// "all the time"; set it to 10 to tick only in the last 10 seconds.
+  static const _tickFromSecondsLeft = 9999;
 
   @override
   void onInit() {
@@ -99,7 +106,12 @@ class QuizController extends GetxController {
       _finishRound(timedOut: true);
       return;
     }
-    remainingSeconds.value = (timeLeft.inMilliseconds / 1000).ceil();
+    
+    final seconds = (timeLeft.inMilliseconds / 1000).ceil();
+    if (seconds != remainingSeconds.value) {
+      remainingSeconds.value = seconds;
+      if (seconds <= _tickFromSecondsLeft) _sound.play(Sfx.tick);
+    }
   }
 
 
@@ -116,6 +128,7 @@ class QuizController extends GetxController {
     if (selected == null || isSubmitted.value) return;
     _answers[currentQuestion.id] = selected;
     isSubmitted.value = true;
+     _sound.play(isCurrentAnswerCorrect ? Sfx.correct : Sfx.wrong);
   }
 
   // Normal rounds: leave the feedback and move on.
