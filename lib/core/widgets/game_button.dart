@@ -13,6 +13,7 @@ class GameButton extends StatefulWidget {
     this.icon,
     this.fontSize = 17,
     this.style = GameButtonStyle.primary,
+    this.playsSound = true,
   });
 
   final String label;
@@ -22,6 +23,7 @@ class GameButton extends StatefulWidget {
   final IconData? icon;
   final double fontSize;
   final GameButtonStyle style;
+  final bool playsSound;
 
   @override
   State<GameButton> createState() => _GameButtonState();
@@ -78,7 +80,7 @@ class _GameButtonState extends State<GameButton> {
               onTap: widget.onPressed == null
                   ? null
                   : () {
-                      playClick();
+                      if (widget.playsSound) playClick();
                       widget.onPressed!();
                     },
               onHighlightChanged: (value) => setState(() => _pressed = value),
