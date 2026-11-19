@@ -87,9 +87,7 @@ class _GaugePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round
-      ..shader = const SweepGradient(
-        startAngle: math.pi,
-        endAngle: 2 * math.pi,
+      ..shader = const LinearGradient(
         colors: [Color(0xFFFFE88A), AppColors.gold, Color(0xFFD9A600)],
       ).createShader(rect);
     canvas.drawArc(rect, math.pi, math.pi * progress, false, fill);
