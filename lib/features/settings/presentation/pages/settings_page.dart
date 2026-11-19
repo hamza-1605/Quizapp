@@ -7,6 +7,11 @@ import 'package:quiz_app/features/settings/presentation/controllers/settings_con
 import 'package:quiz_app/features/sync/presentation/controllers/sync_controller.dart';
 import 'package:quiz_app/features/sync/presentation/widgets/sync_status_bar.dart';
 
+const _aboutText =
+    'Quirozity is a quiz app for the curious. Pick a category, mix topics in a random round, or build a custom quiz from the categories you like. Play at your own pace, or race the clock and see all the answers at the end.\n\n'
+    'After a short first download, everything works offline, and new questions arrive automatically whenever you are online. Spotted a mistake? Tell us through Feedback.\n\n'
+    'Hope you enjoy! Have fun.';
+
 class SettingsPage extends GetView<SettingsController> {
   const SettingsPage({super.key});
 
@@ -83,14 +88,26 @@ class SettingsPage extends GetView<SettingsController> {
 
             const SizedBox(height: 36),
             const _SectionTitle('About'),
-            Text('Quirozity', style: theme.textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text(
-              'Quiz your Curiosity.',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: AppColors.textMuted,
+            _Panel(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Quirozity', style: theme.textTheme.titleMedium),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Quiz your Curiosity.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: AppColors.textMuted,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(_aboutText, style: theme.textTheme.bodyMedium),
+                  ],
+                ),
               ),
-            ),
+            )
           ],
         ),
       ),
